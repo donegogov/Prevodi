@@ -1,0 +1,51 @@
+﻿@model IndexViewViewModel
+
+@{
+    ViewData["Title"] = "Преводи";
+    ViewData["MetaDescription"] = "Германско Македонски Превод";
+
+}
+
+    <div class="text-center">
+        @using (Html.BeginForm(new { @class = "md-form", action = "?", method = "post" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div id="parrentSelectDiv" class="form-group">
+                @Html.DropDownListFor(m => m.selectLanguageTranslationListViewModel.SelectedPrevod, @Model.selectLanguageTranslationListViewModel.GetVidoviPrevodi(), new { @class = "form-control md-textarea mb-2 mt-2 mb-lg-4 mt-lg-4" })
+                @Html.TextAreaFor(m => m.translationViewModel.TekstZaPreveduvanje, new { id = "txtPrevedeteTekst", @class = "form-control waves-effect waves-light tekstZaPreveduvanjeclass mb-2 mb-lg-4", autofocus = "autofocus", placeholder = "Внесете текст" })
+                <br />
+                <div class="text-left">
+                    <button id="btnPrevedeteTekst" class="btn btn-success waves-effect waves-light text-white mb-2 mb-lg-4">Преведете текст</button>
+                </div>
+            </div>
+        }
+
+        <div class="text-left">
+            @if (@Model.translationViewModel.Makedonski != null || @Model.translationViewModel.Hrvatski != null || @Model.translationViewModel.Angliski != null || @Model.translationViewModel.Germanski != null)
+            {
+                <p id="MakedonskiPrevod" style="font-size: larger" class="font-weight-bold">Македонски: @Model.translationViewModel.Makedonski</p>
+                <p id="HrvatskiPrevod" style="font-size: larger" class="font-weight-bold">Хрватски: @Model.translationViewModel.Hrvatski</p>
+                <p id="AngliskiPrevod" style="font-size: larger" class="font-weight-bold">Англиски: @Model.translationViewModel.Angliski</p>
+                <p id="GermanskiPrevod" style="font-size: larger" class="font-weight-bold">Германски: @Model.translationViewModel.Germanski</p>
+            }
+        </div>
+
+    </div>
+
+<script type="text/javascript">
+    grecaptcha.ready(function () {
+        grecaptcha.execute('6LdCFOAUAAAAADRsAUg-ZlmFgyXV1h0R7rsFUO8l', { action: 'homepage' }).then(function (token) {
+            $.ajax({
+                method: "POST",
+                url: "Home/VerifyReCaptchaV3",
+                data: {
+                    response: token,
+                    action: 'homepage'
+                }
+            })
+                .done(function (msg) {
+                })
+        })
+    });
+</script>

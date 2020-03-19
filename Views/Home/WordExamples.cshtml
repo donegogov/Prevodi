@@ -1,0 +1,128 @@
+﻿@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions{
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(Context).RequestToken;
+    }
+}
+
+@model WordExamplesViewModel
+
+@{
+    ViewData["Title"] = "Примери";
+    ViewData["MetaDescription"] = "Пример реченици";
+}
+
+
+    <form id="frmPrimerTekst" onsubmit="return myFunction(Event)">
+        <div class="form-group">
+            @Html.DropDownListFor(m => m.selectLanguageTranslationListViewModel.SelectedPrevod, @Model.selectLanguageTranslationListViewModel.GetVidoviPrevodi(),
+                 new { @class = "form-control mb-2 mt-2 mb-lg-4 mt-lg-4" })
+
+            @Html.TextBoxFor(m => m.Word, new { id = "txtPrimerRecenici", @class = "form-control waves-effect waves-light mb-2 mb-lg-4", autofocus = "autofocus", placeholder = "Внесете текст" })
+
+            <br />
+            <div id="panel">
+            </div>
+            <div class="text-left">
+                <button id="btnPrimerRecenici" type="submit" class="btn btn-success waves-effect waves-light text-white mb-2 mb-lg-4">Преведете текст</button>
+            </div>
+
+        </div>
+
+        <div id="partialView">
+            <partial name="_sensesPartialView" model="@Model" />
+        </div>
+        </div>
+    </form>
+@section Scripts
+{
+    <script type="text/javascript">
+        var prevornext;
+
+        function myFunction(Event) {
+        console.log('before ajax');
+        $.ajax({
+            type: 'post',
+            url: '@Url.Action("WordExamples", "Home")',
+            headers: {
+                "RequestVerificationToken": '@GetAntiXsrfRequestToken()'
+            },
+            //contentType: "application/json; charset=utf-8",
+            data: $('#frmPrimerTekst').serialize(),
+            //dataType: "json",
+            success: function (result) {
+                console.log(result);
+                console.log(prevornext);
+                prevornext = 1;
+                document.getElementById('partialView').innerHTML = result;
+            },
+            error: function (result) {
+                return false;
+            }
+        });
+        console.log('after ajax');
+
+        return false;
+        };
+
+
+        
+        function Previous() {
+            prevornext -= 1;
+            console.log(prevornext);
+            myFunctionPrevOrNext();
+        }
+        function Next() {
+            prevornext += 1;
+            console.log(prevornext);
+            myFunctionPrevOrNext();
+        }
+    function myFunctionPrevOrNext() {
+        console.log('before ajax');
+        $.ajax({
+            type: 'post',
+            url: '@Url.Action("WordExamples", "Home")' + '?pageNumber=' + prevornext,
+            headers: {
+                "RequestVerificationToken": '@GetAntiXsrfRequestToken()'
+            },
+            //contentType: "application/json; charset=utf-8",
+            data: $('#frmPrimerTekst').serialize(),
+            //dataType: "json",
+            success: function (result) {
+                console.log(result);
+                document.getElementById('partialView').innerHTML = result;
+            },
+            error: function (result) {
+                return false;
+            }
+        });
+        console.log('after ajax');
+
+        return false;
+        };
+
+    function myFunctionPrevious(Event) {
+        console.log('before ajax');
+        $.ajax({
+            type: 'post',
+            url: '@Url.Action("WordExamplesPartialViewResult", "Home")',
+            headers: {
+                "RequestVerificationToken": '@GetAntiXsrfRequestToken()'
+            },
+            //contentType: "application/json; charset=utf-8",
+            data: $('#frmPrimerTekst').serialize(),
+            //dataType: "json",
+            success: function (result) {
+                console.log(result);
+                @Model = result;
+            },
+            error: function (result) {
+                return false;
+            }
+        });
+        console.log('after ajax');
+        return false;
+    };
+    </script>
+    }

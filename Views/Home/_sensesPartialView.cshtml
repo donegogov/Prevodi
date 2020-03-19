@@ -1,0 +1,46 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using MacedonianCroatianEnglishGermanTranslateV3.Helpers
+
+@model WordExamplesViewModel
+
+<table class="table" id="tbl-list">
+    <thead>
+        <tr>
+            <th>
+                Пример реченици
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.TranslaatedTextToReturn)
+        {
+            <tr>
+                <td>
+                    <p style="font-size: larger" class="font-weight-bold">Македонски: @Html.DisplayFor(modelItem => item.Makedonski)</p>
+                    <p style="font-size: larger" class="font-weight-bold">Хрватски: @Html.DisplayFor(modelItem => item.Hrvatski)</p>
+                    <p style="font-size: larger" class="font-weight-bold">Англиски: @Html.DisplayFor(modelItem => item.Angliski)</p>
+                    <p style="font-size: larger" class="font-weight-bold">Германски: @Html.DisplayFor(modelItem => item.Germanski)</p>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.TranslaatedTextToReturn.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.TranslaatedTextToReturn.HasNextPage ? "disabled" : "";
+
+    <div class="mb-5">
+        <a onclick="Previous()"
+           class="btn btn-success btn-rounded waves-effect waves-lightt @prevDisabled">
+            Претходно
+        </a>
+        <a onclick="Next()"
+           class="btn btn-success btn-rounded waves-effect waves-light @nextDisabled">
+            Следно
+        </a>
+
+    </div>
+}

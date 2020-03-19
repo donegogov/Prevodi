@@ -283,8 +283,6 @@ namespace MacedonianCroatianEnglishGermanTranslateV3.Controllers
                     PaginatedList<TranslationViewModel> sessionPaginatedList = PaginatedList<TranslationViewModel>.Create(
                         SessionTranslatedSensesSumary,
                         pageNumber ?? 1, pageSize);
-                    //if (pageNumber != null && wordExamplesViewModel.Senses != null && wordExamplesViewModel.Senses.Count() > 0)
-                    //if(wordExamplesViewModel.PageIndex == 0)
                     if (SessionSenses != null && 
                         SessionSenses.Count() > 0 &&
                         sessionPaginatedList.Any(m => m.TekstZaPreveduvanje == wordExamplesViewModel.Word && m.Hrvatski == null && m.Angliski == null))
@@ -338,26 +336,7 @@ namespace MacedonianCroatianEnglishGermanTranslateV3.Controllers
                            SessionTranslatedSensesSumary,
                            pageNumber ?? 1,
                            pageSize);
-                        //WordExamplesPartialViewResult(wordExamplesViewModel.TranslaatedTextToReturn);
-                        //return wordExamplesViewModel;
-                        //HttpContext.Session.GetObjectFromJson<PaginatedList<TranslationViewModel>>(_SessionTranslatedSenses).Union(wordExamplesViewModel.TranslaatedTextToReturn);
 
-                        //PaginatedList<TranslationViewModel> tempPaginatedListTranslatedViewModel = HttpContext.Session.GetObjectFromJson<PaginatedList<TranslationViewModel>>(_SessionTranslatedSenses);
-                        //tempPaginatedListTranslatedViewModel.AddRange(wordExamplesViewModel.TranslaatedTextToReturn);
-                        //tempPaginatedListTranslatedViewModel.Insert(pageNumber ?? 1, result);
-                        /*for (int i = 0; i < wordExamplesViewModel.TranslaatedTextToReturn.Count; i++)
-                        {
-                            for (int j = 0; j < tempPaginatedListTranslatedViewModel.Count; j++)
-                            {
-                                if (wordExamplesViewModel.TranslaatedTextToReturn[i].Germanski == tempPaginatedListTranslatedViewModel[j].Germanski)
-                                {
-                                    tempPaginatedListTranslatedViewModel[j].Makedonski = wordExamplesViewModel.TranslaatedTextToReturn[i].Makedonski;
-                                    tempPaginatedListTranslatedViewModel[j].Hrvatski = wordExamplesViewModel.TranslaatedTextToReturn[i].Hrvatski;
-                                    tempPaginatedListTranslatedViewModel[j].Angliski = wordExamplesViewModel.TranslaatedTextToReturn[i].Angliski;
-                                    tempPaginatedListTranslatedViewModel[j].Germanski = wordExamplesViewModel.TranslaatedTextToReturn[i].Germanski;
-                                }
-                            }
-                        }*/
                         HttpContext.Session.SetObjectAsJson(_SessionTranslatedSenses, SessionTranslatedSenses);
                         HttpContext.Session.SetObjectAsJson(_SessionTranslatedSensesSumary, SessionTranslatedSensesSumary);
 
@@ -365,21 +344,6 @@ namespace MacedonianCroatianEnglishGermanTranslateV3.Controllers
                     }
                     else
                     {
-                        /*for (int i = 0; i < SessionTranslatedSenses.Count; i++)
-                        {
-                            for (int j = 0; j < SessionSenses.Count; j++)
-                            {
-                                if (SessionSenses[j].Germanski == SessionTranslatedSenses[i].Germanski)
-                                {
-                                    SessionSenses[j].TekstZaPreveduvanje = SessionTranslatedSenses[j].TekstZaPreveduvanje;
-                                    SessionSenses[j].Makedonski = SessionTranslatedSenses[j].Makedonski;
-                                    SessionSenses[j].Hrvatski = SessionTranslatedSenses[j].Hrvatski;
-                                    SessionSenses[j].Angliski = SessionTranslatedSenses[j].Angliski;
-                                    SessionSenses[j].Germanski = SessionTranslatedSenses[j].Germanski;
-                                }
-                            }
-                        }*/
-
                         wordExamplesViewModel.TranslaatedTextToReturn = PaginatedList<TranslationViewModel>.Create(
                             SessionTranslatedSensesSumary,
                             pageNumber ?? 1,
@@ -432,9 +396,6 @@ namespace MacedonianCroatianEnglishGermanTranslateV3.Controllers
             if (httpResponse.StatusCode == HttpStatusCode.OK)
             {
                 data = await getRequestJson(httpResponse);
-                /*data = (JObject)data["results"];
-                data = (JObject)data["lexicalEntries"];
-                data = (JObject)data["entries"];*/
             }
             else if (httpResponse.StatusCode == HttpStatusCode.NotFound)
             {
@@ -453,11 +414,6 @@ namespace MacedonianCroatianEnglishGermanTranslateV3.Controllers
                         {
                             foreach (var text in senses.Value<JToken>("examples"))
                             {
-                                /*TranslationViewModel translatedText = await MacedonianCroatianEnglishGermanTranslation.DeEnCroMk(text.Value<String>("text"), _googleCloudPlatformProjectName.Value.ProjectName, _logger, _googleTranslateApiCredentials);
-                                translatedText.Makedonski = translatedText.Makedonski.Replace("/", "\\");
-                                translatedText.Hrvatski = translatedText.Hrvatski.Replace("/", "\\");
-                                translatedText.Angliski = translatedText.Angliski.Replace("/", "\\");
-                                translatedText.Germanski = translatedText.Germanski.Replace("/", "\\");*/
                                 TranslationViewModel translationViewModel = new TranslationViewModel();
                                 translationViewModel.Germanski = text.Value<String>("text");
                                 translationViewModel.TekstZaPreveduvanje = Word;
@@ -467,12 +423,6 @@ namespace MacedonianCroatianEnglishGermanTranslateV3.Controllers
                     }
                 }
             }
-            //return "Hpw are you doing";
-            /*return new PartialViewResult
-            {
-                ViewName = "_partialAjaxResponseDiv",
-                ViewData = this.ViewData
-            };*/
             PaginatedList<TranslationViewModel> tempPaginatedList = PaginatedList<TranslationViewModel>.Create(
                 wordExamplesViewModelToReturn.Senses,
                 pageNumber ?? 1, pageSize);
@@ -498,18 +448,8 @@ namespace MacedonianCroatianEnglishGermanTranslateV3.Controllers
                     }
                 }
             }
-            /*wordExamplesViewModelToReturn.TranslaatedTextToReturn = PaginatedList<TranslationViewModel>.Create(
-                wordExamplesViewModelToReturn.Senses.Union(tempTranslationViewModel, new TranslationViewModelEqualityComparer()).ToList(),
-                pageNumber ?? 1, pageSize);*/
 
-            //wordExamplesViewModelToReturn.TranslaatedTextToReturn.AddRange(tempTranslationViewModel);
             wordExamplesViewModelToReturn.TranslaatedTextToReturn = tempPaginatedList;
-
-            /*wordExamplesViewModelToReturn.TranslaatedTextToReturn = PaginatedList<TranslationViewModel>.Create(
-                tempPaginatedList,
-                pageNumber ?? 1, pageSize);*/
-
-            //wordExamplesViewModelToReturn.TranslaatedTextToReturn = tempPaginatedList;
 
             List<TranslationViewModel> SessinTranslatedSensesSumary = wordExamplesViewModelToReturn.Senses;
 
@@ -547,11 +487,7 @@ namespace MacedonianCroatianEnglishGermanTranslateV3.Controllers
         public async Task<TranslationViewModel> WordExamplesTextTranslate(String text)
         {
             TranslationViewModel translatedText = await MacedonianCroatianEnglishGermanTranslation.DeEnCroMk(text, _googleCloudPlatformProjectName.Value.ProjectName, _logger, _googleTranslateApiCredentials);
-            /*translatedText.Makedonski = translatedText.Makedonski.Replace("/", "\\");
-            translatedText.Hrvatski = translatedText.Hrvatski.Replace("/", "\\");
-            translatedText.Angliski = translatedText.Angliski.Replace("/", "\\");
-            translatedText.Germanski = translatedText.Germanski.Replace("/", "\\");*/
-            //wordExamplesViewModelToReturn.Sentences.Add(translatedText);
+
             return translatedText;
         }
 
@@ -587,9 +523,6 @@ namespace MacedonianCroatianEnglishGermanTranslateV3.Controllers
             if (httpResponse.StatusCode == HttpStatusCode.OK)
             {
                 data = await getRequestJson(httpResponse);
-                /*data = (JObject)data["results"];
-                data = (JObject)data["lexicalEntries"];
-                data = (JObject)data["entries"];*/
             }
             else if (httpResponse.StatusCode == HttpStatusCode.NotFound)
             {
